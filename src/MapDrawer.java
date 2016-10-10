@@ -12,4 +12,10 @@ public class MapDrawer extends JFrame
     {
 
     }
+
+    @Override
+    public void dispose()
+    {}
+
+
 }
