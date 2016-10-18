@@ -23,7 +23,7 @@ public class MapDrawer extends Frame implements GLEventListener
 
     double AspectRatio;
 
-    gridFloatReader gfl = new gridFloatReader("mtsthelensidkman");
+    gridFloatReader gfl = new gridFloatReader("ned_86879038");
 
     int height;
     int width;
