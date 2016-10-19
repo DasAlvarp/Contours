@@ -93,10 +93,24 @@ public class Square
 				{
 					if (sideTrue[x])
 					{
-						System.out.println("O");
 						gl.glVertex2f(sideCoords[x].x, sideCoords[x].y);
 					}
 				}
+			}
+			gl.glEnd();
+		}
+		else if(numTrue == 4)//just always do one case. It should work? Nobody knows.
+		{
+			gl.glBegin(GL2.GL_LINES);
+			{
+				gl.glVertex2f(sideCoords[1].x, sideCoords[1].y);
+				gl.glVertex2f(sideCoords[0].x, sideCoords[0].y);
+			}
+			gl.glEnd();
+			gl.glBegin(GL2.GL_LINES);
+			{
+				gl.glVertex2f(sideCoords[2].x, sideCoords[2].y);
+				gl.glVertex2f(sideCoords[3].x, sideCoords[3].y);
 			}
 			gl.glEnd();
 		}
