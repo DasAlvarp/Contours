@@ -25,8 +25,8 @@ public class MapDrawer extends Frame implements GLEventListener
 
 	gridFloatReader gfl = new gridFloatReader("ned_86879038");
 
-	int height;
-	int width;
+	int height = 600;
+	int width = 1200;
 
 	public MapDrawer()
 	{
@@ -50,7 +50,7 @@ public class MapDrawer extends Frame implements GLEventListener
 			}
 		});
 
-		setSize(600, 600);
+		setSize(width, height);
 		setVisible(true);
 	}
 
@@ -78,20 +78,69 @@ public class MapDrawer extends Frame implements GLEventListener
 		//Set a color (redish - no other components)
 		gl.glColor3f(0.0f, 1f, 0.0f);
 		//Define a primitive -  A polygon in this case
-		gl.glBegin(GL2.GL_POLYGON);
-		gl.glVertex2i(100, 20);
-		gl.glVertex2i(100, 460);
-		gl.glVertex2i(540, 460);
-		gl.glVertex2i(540, 20);
-		gl.glEnd();
 
-		DrawArea(gl);
+		DrawArea(gl, 6, Color.white, Color.black);
 	}
 
-	public void DrawArea(GL2 gl)
+	//draws all contour lines
+	public void DrawArea(GL2 gl, int stepNum, Color colorStart, Color colorEnd)
 	{
-		Square sq = new Square(0,0, 500, 500, new float[][] {{2,1},{2,2}});
-		sq.DrawContour(1.5f, gl);
+		double stepSize = (gfl.maxHeight - gfl.minHeight) / stepNum;
+		double[] startColor = new double[] {(double)colorStart.getRed()/255.0, (double)colorStart.getGreen()/255.0,(double)colorStart.getBlue()/255.0};
+		double[] endColor = new double[] {(double)colorEnd.getRed()/255.0, (double)colorEnd.getGreen()/255.0,(double)colorEnd.getBlue()/255.0};
+
+		double[] colorStep = new double[3];
+		for(int x = 0; x < 3; x++)
+		{
+			colorStep[x] = (endColor[x] - startColor[x])/stepNum;
+		}
+
+		for(int s = 0; s < stepNum; s++)
+		{
+			DrawLevel((float)gfl.minHeight + s * (float)stepSize, gl, DoubleToColor(Add(startColor, Multiply(s, colorStep))));
+
+		}
+	}
+
+	public Color DoubleToColor(double[] color)
+	{
+		return new Color((float)color[0], (float)color[1], (float)color[2]);
+	}
+
+	public double[] Add(double[] v1, double[] v2)
+	{
+		double[] toRet = new double[v1.length];
+		for(int x = 0; x < toRet.length; x++)
+		{
+			toRet[x] = v1[x] + v2[x];
+		}
+
+		return  toRet;
+	}
+
+	public double[] Multiply(int scalar, double[] vals)
+	{
+		double[] toRet = new double[vals.length];
+		for(int x = 0; x < vals.length; x++)
+		{
+			toRet[x] = vals[x] * scalar;
+		}
+
+		return  toRet;
+	}
+
+	//draws one level of contour lines
+	public void DrawLevel(float level, GL2 gl, Color color)
+	{
+		for(int x = 0; x < gfl.height.length - 1; x++)
+		{
+			for(int y = 0; y < gfl.height[x].length - 1; y++)
+			{
+				Square sq = new Square(x,y, 1, 1, new float[][] {{gfl.height[x][y],gfl.height[x][y +1 ]},{gfl.height[x + 1][y],gfl.height[x + 1][y + 1]}});
+				sq.DrawContour(level, gl, color);
+
+			}
+		}
 	}
 
 
@@ -105,10 +154,10 @@ public class MapDrawer extends Frame implements GLEventListener
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		//this glOrtho call sets up a 640x480 unit plane with a parallel projection.
-		gl.glOrtho(0, 640, 0, 480, 0, 10);
+		gl.glOrtho(0, this.width, 0, this.height, 0, 10);
 		//Handle aspect ratio
 
-		gl.glViewport(x, y,600, 600);
+		gl.glViewport(x, y,this.width, this.height);
 		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}

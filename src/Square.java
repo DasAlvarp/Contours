@@ -1,5 +1,7 @@
 import com.jogamp.opengl.*;
 
+import java.awt.*;
+
 /**
  * Created by alvar on 10/18/2016.
  */
@@ -29,7 +31,7 @@ public class Square
 		corners[1][1] = new Coordinate((x + 1) * xScale, (y + 1) * yScale);
 	}
 
-	public void DrawContour(float height, GL2 gl)
+	public void DrawContour(float height, GL2 gl, Color color)
 	{
 		int numTrue = 0;
 
@@ -84,7 +86,7 @@ public class Square
 
 		if(numTrue == 2)
 		{
-			gl.glColor3d(1,0,0);
+			gl.glColor3d((float)color.getRed() / 255f, (float)color.getGreen() / 255f, (float)color.getBlue() / 255f);
 			gl.glBegin(GL2.GL_LINES);
 			{
 				for (int x = 0; x < 4; x++)
