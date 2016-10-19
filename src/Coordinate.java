@@ -12,4 +12,8 @@ public class Coordinate
 		this.y = y;
 	}
 
+	public Coordinate GetBetween(Coordinate other)
+	{
+		return new Coordinate((x + other.x) /2, (y + other.y) / 2);
+	}
 }
